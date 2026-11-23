@@ -1,0 +1,71 @@
+erDiagram
+    USERS ||--o{ DOCUMENTS : owns
+    USERS ||--o{ DOCUMENT_PERMISSIONS : receives
+    DOCUMENTS ||--o{ DOCUMENT_PERMISSIONS : grants
+    DOCUMENTS ||--o{ DOCUMENT_VERSIONS : snapshots
+    USERS ||--o{ DOCUMENT_VERSIONS : creates
+    USERS ||--o{ REFRESH_TOKENS : holds
+    DOCUMENTS ||--o{ SHARE_LINKS : exposes
+    USERS ||--o{ SHARE_LINKS : creates
+    USERS o|--o{ AUDIT_LOGS : acts
+
+    USERS {
+        int id PK
+        string email UK
+        string password_hash
+        datetime created_at
+    }
+    DOCUMENTS {
+        int id PK
+        int owner_id FK
+        string title
+        bytes encrypted_content
+        datetime created_at
+        datetime updated_at
+    }
+    DOCUMENT_PERMISSIONS {
+        int id PK
+        int document_id FK
+        int user_id FK
+        string role
+        datetime created_at
+    }
+    DOCUMENT_VERSIONS {
+        int id PK
+        int document_id FK
+        int version_number
+        string title
+        bytes encrypted_content
+        int created_by FK
+        datetime created_at
+    }
+    REFRESH_TOKENS {
+        int id PK
+        string jti UK
+        string token_hash UK
+        int user_id FK
+        datetime expires_at
+        datetime revoked_at
+        string replaced_by
+    }
+    SHARE_LINKS {
+        int id PK
+        int document_id FK
+        string token_hash UK
+        int created_by FK
+        datetime expires_at
+        string password_hash "nullable"
+        boolean one_time
+        boolean revoked
+        datetime created_at
+    }
+    AUDIT_LOGS {
+        int id PK
+        int actor_id
+        string action
+        string resource_type
+        string resource_id
+        string details
+        string ip_address "nullable"
+        datetime created_at
+    }
