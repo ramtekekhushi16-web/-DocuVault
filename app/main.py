@@ -31,6 +31,14 @@ app.include_router(versions.router)
 app.include_router(sharing.router)
 app.include_router(search.router)
 app.include_router(audit.router)
+@app.get("/", tags=["health"])
+def root() -> dict[str, str]:
+    return {
+        "message": "Welcome to DocuVault API",
+        "status": "success",
+        "documentation": "/docs",
+        "health": "/health"
+    }
 
 
 @app.get("/health", tags=["health"])
